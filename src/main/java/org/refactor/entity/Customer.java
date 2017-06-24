@@ -12,8 +12,9 @@ public class Customer {
         double totalAmount = 0;
         for (Rental rental : rentals) {
             //show figures for this rental
-            result.append("\t").append(rental.getMovie().getTitle()).append("\t").append(rental.getCharge()).append("\n");
-            totalAmount += rental.getCharge();
+            final Movie movie = rental.getMovie();
+            result.append("\t").append(movie.getTitle()).append("\t").append(movie.price.getCharge(rental.getDaysRented())).append("\n");
+            totalAmount += movie.price.getCharge(rental.getDaysRented());
         }
         //add footer lines
         result.append("Amount owed is ").append(totalAmount).append("\n").append("You earned ").append(getFrequentRenterPoints()).append(" frequent renter points");
@@ -23,7 +24,7 @@ public class Customer {
     private int getFrequentRenterPoints() {
         int frequentRenterPoints = 0;
         for (Rental rental : rentals) {
-            frequentRenterPoints += rental.getFrequentRenterPoints();
+            frequentRenterPoints += rental.getMovie().getFrequentRenterPoints(rental.getDaysRented());
         }
         return frequentRenterPoints;
     }
