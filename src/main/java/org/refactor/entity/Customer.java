@@ -9,24 +9,19 @@ public class Customer {
 
     public String statement() {
         StringBuilder result = new StringBuilder("Rental Record for " + name + "\n");
-        double totalAmount = 0;
-        for (Rental rental : rentals) {
-            //show figures for this rental
+
+        double totalAmount = rentals.stream().mapToDouble(rental -> {
             final Movie movie = rental.getMovie();
             result.append("\t").append(movie.getTitle()).append("\t").append(movie.price.getCharge(rental.getDaysRented())).append("\n");
-            totalAmount += movie.price.getCharge(rental.getDaysRented());
-        }
+            return movie.price.getCharge(rental.getDaysRented());
+        }).sum();
         //add footer lines
         result.append("Amount owed is ").append(totalAmount).append("\n").append("You earned ").append(getFrequentRenterPoints()).append(" frequent renter points");
         return result.toString();
     }
 
     private int getFrequentRenterPoints() {
-        int frequentRenterPoints = 0;
-        for (Rental rental : rentals) {
-            frequentRenterPoints += rental.getMovie().getFrequentRenterPoints(rental.getDaysRented());
-        }
-        return frequentRenterPoints;
+        return rentals.parallelStream().mapToInt(rental -> rental.getMovie().getFrequentRenterPoints(rental.getDaysRented())).sum();
     }
 
     public Customer(final String name, final List rentals) {

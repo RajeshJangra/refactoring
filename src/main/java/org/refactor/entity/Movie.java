@@ -48,7 +48,7 @@ public class Movie {
     }
 
     int getFrequentRenterPoints(final int daysRented) {
-        return (price.getPrice() == NEW_RELEASE && daysRented > 1) ? 2 : 1;
+        return (price.getPriceCode() == NEW_RELEASE && daysRented > 1) ? 2 : 1;
     }
 }
 
